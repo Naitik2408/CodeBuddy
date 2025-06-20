@@ -10,8 +10,6 @@ const App = () => {
 
   return (
     <>
-      {/* Don't show navbar on NotFound or optional pages if needed */}
-      {/* {location.pathname !== '*' && <Navbar />} */}
 
       <Routes>
         {routes.map(({ path, element }) => {
