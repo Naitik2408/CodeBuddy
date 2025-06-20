@@ -19,9 +19,23 @@ const questionService = {
   getQuestionResponses: (questionId) => 
     axios.get(`/api/questions/${questionId}/responses`),
 
-  // Create a new question
+  // Create a new question - FIX: Added the missing method
   createQuestion: (questionData) => 
     axios.post('/api/questions/create', questionData),
+
+  // Additional methods for compatibility
+  create: (questionData) => 
+    axios.post('/api/questions/create', questionData),
+
+  getByGroup: (groupId) => axios.get(`/api/questions/group/${groupId}`),
+
+  getById: (questionId) => axios.get(`/api/questions/${questionId}`),
+
+  update: (questionId, updateData) => 
+    axios.put(`/api/questions/${questionId}`, updateData),
+
+  delete: (questionId) => 
+    axios.delete(`/api/questions/${questionId}`),
 };
 
 export default questionService;

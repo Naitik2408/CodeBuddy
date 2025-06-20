@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import questionService from '../../services/questionService';
 
-// Create question
+// Create question - FIX: Use the correct service method
 export const createQuestion = createAsyncThunk(
   'question/createQuestion',
   async (questionData, { rejectWithValue }) => {
     try {
-      const response = await questionService.create(questionData);
+      const response = await questionService.createQuestion(questionData); // Fixed method name
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to create question');
@@ -14,12 +14,12 @@ export const createQuestion = createAsyncThunk(
   }
 );
 
-// Get questions by group
+// Get questions by group - FIX: Use the correct service method
 export const getQuestionsByGroup = createAsyncThunk(
   'question/getQuestionsByGroup',
   async (groupId, { rejectWithValue }) => {
     try {
-      const response = await questionService.getByGroup(groupId);
+      const response = await questionService.getGroupQuestions(groupId); // Fixed method name
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch questions');
@@ -27,12 +27,12 @@ export const getQuestionsByGroup = createAsyncThunk(
   }
 );
 
-// Get question by ID
+// Get question by ID - FIX: Use the correct service method
 export const getQuestionById = createAsyncThunk(
   'question/getQuestionById',
   async (questionId, { rejectWithValue }) => {
     try {
-      const response = await questionService.getById(questionId);
+      const response = await questionService.getQuestionById(questionId); // Fixed method name
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch question');
