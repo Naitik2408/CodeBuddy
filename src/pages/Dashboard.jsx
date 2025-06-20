@@ -21,7 +21,9 @@ import {
   Zap,
   Sun,
   Moon,
-  Sparkles
+  Sparkles,
+  Menu,
+  X
 } from 'lucide-react';
 import axios from '../services/axiosInstance';
 
@@ -41,6 +43,7 @@ const Dashboard = () => {
   // UI States
   const [searchQuery, setSearchQuery] = useState('');
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -182,14 +185,15 @@ const Dashboard = () => {
         }}
       ></div>
 
-      {/* Header */}
+      {/* Header - Mobile Responsive */}
       <header className={`relative z-20 backdrop-blur-sm transition-all duration-300 ${
         isDarkMode 
           ? 'border-b border-slate-700/50' 
           : 'border-b border-gray-200/50'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+          {/* Desktop & Tablet Header */}
+          <div className="hidden md:flex justify-between items-center h-20">
             {/* Logo - Clickable */}
             <button
               onClick={() => navigate('/')}
@@ -275,13 +279,165 @@ const Dashboard = () => {
               </button>
             </div>
           </div>
+
+          {/* Mobile Header */}
+          <div className="md:hidden flex justify-between items-center h-16">
+            {/* Mobile Logo */}
+            <button
+              onClick={() => navigate('/')}
+              className="flex items-center space-x-2 cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200 group"
+            >
+              <div className="relative">
+                <Code2 className={`w-6 h-6 transition-colors duration-300 ${
+                  isDarkMode ? 'text-purple-400' : 'text-purple-600'
+                }`} />
+                <div className={`absolute -top-1 -right-1 w-2 h-2 rounded-full animate-ping ${
+                  isDarkMode ? 'bg-pink-400' : 'bg-pink-500'
+                }`}></div>
+              </div>
+              <div>
+                <h1 className={`text-lg font-bold bg-gradient-to-r bg-clip-text text-transparent transition-colors duration-300 ${
+                  isDarkMode 
+                    ? 'from-purple-400 to-pink-400' 
+                    : 'from-purple-600 to-pink-600'
+                }`}>
+                  CodeBuddy
+                </h1>
+              </div>
+            </button>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className={`p-2 rounded-lg transition-all duration-300 ${
+                isDarkMode 
+                  ? 'bg-slate-800/80 border border-slate-600/50 text-white' 
+                  : 'bg-white/80 border border-gray-200/50 text-gray-900'
+              }`}
+              aria-label="Toggle mobile menu"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          </div>
+
+          {/* Mobile Menu Dropdown */}
+          {isMobileMenuOpen && (
+            <div className={`md:hidden absolute top-full left-0 right-0 backdrop-blur-sm border-t transition-all duration-300 z-50 ${
+              isDarkMode 
+                ? 'bg-slate-900/95 border-slate-700/50' 
+                : 'bg-white/95 border-gray-200/50'
+            }`}>
+              <div className="px-4 py-6 space-y-4 max-h-screen overflow-y-auto">
+                {/* Mobile User Info */}
+                <div className={`flex items-center space-x-3 pb-4 border-b ${
+                  isDarkMode ? 'border-slate-700/50' : 'border-gray-200/50'
+                }`}>
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+                    <span className="text-white font-semibold text-lg">
+                      {user?.name?.charAt(0)?.toUpperCase()}
+                    </span>
+                  </div>
+                  <div>
+                    <p className={`font-medium transition-colors duration-300 ${
+                      isDarkMode ? 'text-white' : 'text-gray-900'
+                    }`}>Welcome back,</p>
+                    <p className={`text-sm transition-colors duration-300 ${
+                      isDarkMode ? 'text-purple-300' : 'text-purple-600'
+                    }`}>{user?.name}</p>
+                  </div>
+                </div>
+
+                {/* Mobile Theme Toggle */}
+                <button
+                  onClick={() => {
+                    handleThemeToggle();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between p-4 rounded-xl transition-all duration-300 ${
+                    isDarkMode 
+                      ? 'bg-slate-800/50 border border-slate-600/30 text-white' 
+                      : 'bg-gray-100 border border-gray-200 text-gray-900'
+                  }`}
+                >
+                  <span className="flex items-center">
+                    {isDarkMode ? (
+                      <Sun className="w-5 h-5 text-yellow-500 mr-3" />
+                    ) : (
+                      <Moon className="w-5 h-5 text-purple-600 mr-3" />
+                    )}
+                    <span className="font-medium">
+                      Switch to {isDarkMode ? 'Light' : 'Dark'} Mode
+                    </span>
+                  </span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+
+                {/* Mobile Join Group */}
+                <button
+                  onClick={() => {
+                    setShowJoinModal(true);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all duration-300 ${
+                    isDarkMode 
+                      ? 'bg-green-600/20 text-green-300 border-green-500/30' 
+                      : 'bg-green-100 text-green-700 border-green-300'
+                  }`}
+                >
+                  <span className="flex items-center">
+                    <UserPlus className="w-5 h-5 mr-3" />
+                    <span className="font-medium">Join Group</span>
+                  </span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+
+                {/* Mobile Create Group */}
+                <button
+                  onClick={() => {
+                    navigate('/dashboard/create-group');
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="w-full flex items-center justify-between p-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl transition-all duration-300"
+                >
+                  <span className="flex items-center">
+                    <Plus className="w-5 h-5 mr-3" />
+                    <span className="font-medium">Create Group</span>
+                  </span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+
+                {/* Mobile Logout */}
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all duration-300 ${
+                    isDarkMode 
+                      ? 'bg-red-500/20 text-red-300 border-red-500/30' 
+                      : 'bg-red-100 text-red-600 border-red-200'
+                  }`}
+                >
+                  <span className="flex items-center">
+                    <LogOut className="w-5 h-5 mr-3" />
+                    <span className="font-medium">Logout</span>
+                  </span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </header>
 
       {/* Main Content */}
       <main className="relative z-10 max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        {/* Hero Stats Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {/* Hero Stats Section - Mobile Responsive */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-8">
           {/* Total Groups */}
           <div className={`backdrop-blur-sm border rounded-2xl p-6 hover:border-purple-500/50 transition-all duration-300 group ${
             isDarkMode 
@@ -360,10 +516,10 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* Action Bar */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
+        {/* Action Bar - Mobile Responsive */}
+        <div className="flex flex-col gap-6 mb-8">
           <div>
-            <h2 className={`text-3xl font-bold bg-gradient-to-r bg-clip-text text-transparent mb-2 transition-colors duration-300 ${
+            <h2 className={`text-2xl md:text-3xl font-bold bg-gradient-to-r bg-clip-text text-transparent mb-2 transition-colors duration-300 ${
               isDarkMode 
                 ? 'from-white to-purple-200' 
                 : 'from-gray-900 to-purple-800'
@@ -380,8 +536,8 @@ const Dashboard = () => {
             </p>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+          {/* Action Buttons - Mobile Responsive */}
+          <div className="flex flex-col gap-4">
             {/* Search Bar */}
             <div className="relative">
               <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
@@ -392,7 +548,7 @@ const Dashboard = () => {
                 placeholder="Search groups..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className={`pl-10 pr-4 py-3 border rounded-xl focus:outline-none transition-all duration-300 w-full sm:w-64 ${
+                className={`pl-10 pr-4 py-3 border rounded-xl focus:outline-none transition-all duration-300 w-full ${
                   isDarkMode 
                     ? 'bg-slate-800/50 border-slate-600/50 text-white placeholder-gray-400 focus:border-purple-400' 
                     : 'bg-white/70 border-gray-300/50 text-gray-900 placeholder-gray-500 focus:border-purple-500'
@@ -400,27 +556,30 @@ const Dashboard = () => {
               />
             </div>
 
-            {/* Join Group Button */}
-            <button
-              onClick={() => setShowJoinModal(true)}
-              className={`flex items-center justify-center px-6 py-3 rounded-xl border transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 group ${
-                isDarkMode 
-                  ? 'bg-green-600/20 text-green-300 border-green-500/30 hover:bg-green-600/30 hover:border-green-400/50' 
-                  : 'bg-green-100 text-green-700 border-green-300 hover:bg-green-200 hover:border-green-400'
-              }`}
-            >
-              <UserPlus className="w-5 h-5 mr-2 group-hover:animate-pulse" />
-              Join Group
-            </button>
+            {/* Action Buttons Row */}
+            <div className="flex flex-col sm:flex-row gap-3">
+              {/* Join Group Button */}
+              <button
+                onClick={() => setShowJoinModal(true)}
+                className={`flex-1 flex items-center justify-center px-6 py-3 rounded-xl border transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95 group ${
+                  isDarkMode 
+                    ? 'bg-green-600/20 text-green-300 border-green-500/30 hover:bg-green-600/30 hover:border-green-400/50' 
+                    : 'bg-green-100 text-green-700 border-green-300 hover:bg-green-200 hover:border-green-400'
+                }`}
+              >
+                <UserPlus className="w-5 h-5 mr-2 group-hover:animate-pulse" />
+                Join Group
+              </button>
 
-            {/* Create Group Button */}
-            <button
-              onClick={() => navigate('/dashboard/create-group')}
-              className="flex items-center justify-center px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform cursor-pointer hover:scale-105 active:scale-95 shadow-lg shadow-purple-500/25 group"
-            >
-              <Plus className="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-300" />
-              Create Group
-            </button>
+              {/* Create Group Button */}
+              <button
+                onClick={() => navigate('/dashboard/create-group')}
+                className="flex-1 flex items-center justify-center px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform cursor-pointer hover:scale-105 active:scale-95 shadow-lg shadow-purple-500/25 group"
+              >
+                <Plus className="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-300" />
+                Create Group
+              </button>
+            </div>
           </div>
         </div>
 
@@ -522,9 +681,9 @@ const Dashboard = () => {
           </div>
         )}
 
-        {/* Groups Grid */}
+        {/* Groups Grid - Mobile Responsive */}
         {!loading && filteredGroups.length > 0 && (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {filteredGroups.map((group) => (
               <div 
                 key={group._id} 
@@ -692,7 +851,7 @@ const Dashboard = () => {
                 isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-800'
               }`}
             >
-              <Plus className="w-6 h-6 rotate-45" />
+              <X className="w-6 h-6" />
             </button>
 
             {/* Modal Header */}

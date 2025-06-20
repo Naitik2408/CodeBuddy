@@ -82,17 +82,17 @@ const MemberCard = ({ member, isDarkMode }) => {
   };
 
   return (
-    <div className={`backdrop-blur-sm border rounded-2xl p-6 transition-all duration-300 hover:transform hover:scale-[1.02] group relative overflow-hidden ${
+    <div className={`backdrop-blur-sm border rounded-2xl p-4 md:p-6 transition-all duration-300 hover:transform hover:scale-[1.02] group relative overflow-hidden ${
       isDarkMode 
         ? 'bg-slate-800/30 border-slate-600/30 hover:border-purple-500/50' 
         : 'bg-white/40 border-gray-200/30 hover:border-purple-400/50 hover:shadow-lg'
     }`}>
       {/* Animated Background Element */}
-      <div className={`absolute top-0 right-0 w-16 h-16 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-all duration-500 ${
+      <div className={`absolute top-0 right-0 w-12 h-12 md:w-16 md:h-16 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-all duration-500 ${
         isDarkMode ? 'bg-purple-500/20' : 'bg-purple-400/30'
       }`}></div>
 
-      {/* Data Source Indicator */}
+      {/* Data Source Indicator - Mobile Responsive */}
       <div className={`absolute top-2 left-2 px-2 py-1 rounded-full text-xs font-medium transition-all duration-300 ${
         isRealData 
           ? isDarkMode 
@@ -102,17 +102,18 @@ const MemberCard = ({ member, isDarkMode }) => {
             ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30' 
             : 'bg-yellow-100 text-yellow-700 border border-yellow-300'
       }`}>
-        {isRealData ? '📊 Live' : '🎲 Demo'}
+        <span className="hidden sm:inline">{isRealData ? '📊 Live' : '🎲 Demo'}</span>
+        <span className="sm:hidden">{isRealData ? '📊' : '🎲'}</span>
       </div>
 
-      {/* Admin Badge */}
+      {/* Admin Badge - Mobile Responsive */}
       {isAdmin && (
-        <div className="absolute -top-2 -right-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full p-2 shadow-lg border-2 border-white z-10">
-          <Crown className="w-4 h-4 text-white" />
+        <div className="absolute -top-1 -right-1 md:-top-2 md:-right-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full p-1.5 md:p-2 shadow-lg border-2 border-white z-10">
+          <Crown className="w-3 h-3 md:w-4 md:h-4 text-white" />
         </div>
       )}
 
-      {/* Rank Badge */}
+      {/* Rank Badge - Mobile Responsive */}
       {rank && rank <= 3 && (
         <div className={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-bold border transition-all duration-300 ${
           rank === 1 
@@ -127,62 +128,64 @@ const MemberCard = ({ member, isDarkMode }) => {
         </div>
       )}
 
-      <div className="flex items-center space-x-4 mb-4 relative z-10 mt-6">
-        {/* Avatar */}
-        <div className="relative">
-          <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-            <span className="text-white font-bold text-lg">
+      {/* Member Header - Mobile Responsive */}
+      <div className="flex items-center space-x-3 md:space-x-4 mb-4 relative z-10 mt-4 md:mt-6">
+        {/* Avatar - Mobile Responsive */}
+        <div className="relative flex-shrink-0">
+          <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+            <span className="text-white font-bold text-base md:text-lg">
               {getInitials(member.userId?.name)}
             </span>
           </div>
-          {/* Online indicator */}
-          <div className={`absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 transition-colors duration-300 ${
+          {/* Online indicator - Mobile Responsive */}
+          <div className={`absolute -bottom-1 -right-1 w-3 h-3 md:w-4 md:h-4 bg-green-500 rounded-full border-2 transition-colors duration-300 ${
             isDarkMode ? 'border-slate-800' : 'border-white'
           }`}>
             <div className="w-full h-full bg-green-500 rounded-full animate-pulse"></div>
           </div>
         </div>
 
-        {/* Member Info */}
-        <div className="flex-1">
-          <div className="flex items-center space-x-2 mb-1">
-            <h4 className={`font-bold group-hover:text-purple-400 transition-colors duration-300 ${
+        {/* Member Info - Mobile Responsive */}
+        <div className="flex-1 min-w-0">
+          <div className="flex flex-col space-y-1 mb-1">
+            <h4 className={`font-bold group-hover:text-purple-400 transition-colors duration-300 text-sm md:text-base truncate ${
               isDarkMode ? 'text-white' : 'text-gray-900'
             }`}>
               {member.userId?.name || 'Unknown User'}
             </h4>
             {isAdmin && (
-              <div className={`flex items-center px-2 py-1 rounded-full text-xs font-medium border transition-all duration-300 ${
+              <div className={`flex items-center px-2 py-1 rounded-full text-xs font-medium border transition-all duration-300 self-start ${
                 isDarkMode 
                   ? 'bg-blue-500/20 text-blue-300 border-blue-500/30' 
                   : 'bg-blue-100 text-blue-700 border-blue-300'
               }`}>
-                <Crown className="w-3 h-3 mr-1" />
-                Admin
+                <Crown className="w-2 h-2 md:w-3 md:h-3 mr-1" />
+                <span className="hidden sm:inline">Admin</span>
+                <span className="sm:hidden">A</span>
               </div>
             )}
           </div>
-          <p className={`text-sm capitalize transition-colors duration-300 ${
+          <p className={`text-xs md:text-sm capitalize transition-colors duration-300 ${
             isDarkMode ? 'text-gray-400' : 'text-gray-600'
           }`}>
             {member.role}
           </p>
         </div>
 
-        {/* Sparkle Icon for Visual Appeal */}
-        <Sparkles className={`w-4 h-4 opacity-30 group-hover:opacity-100 transition-all duration-300 ${
+        {/* Sparkle Icon - Mobile Responsive */}
+        <Sparkles className={`w-3 h-3 md:w-4 md:h-4 opacity-30 group-hover:opacity-100 transition-all duration-300 flex-shrink-0 ${
           isDarkMode ? 'text-purple-400' : 'text-purple-500'
         }`} />
       </div>
 
-      {/* Primary Stats */}
-      <div className="grid grid-cols-3 gap-3 mb-4">
-        <div className={`text-center p-3 rounded-lg border transition-all duration-300 ${
+      {/* Primary Stats - Mobile Responsive */}
+      <div className="grid grid-cols-3 gap-2 md:gap-3 mb-4">
+        <div className={`text-center p-2 md:p-3 rounded-lg border transition-all duration-300 ${
           isDarkMode 
             ? 'bg-slate-700/30 border-slate-600/30' 
             : 'bg-gray-100/60 border-gray-300/30'
         }`}>
-          <div className={`text-lg font-bold transition-colors duration-300 ${
+          <div className={`text-base md:text-lg font-bold transition-colors duration-300 ${
             isDarkMode ? 'text-purple-400' : 'text-purple-600'
           }`}>
             {problemsSolved}
@@ -194,27 +197,28 @@ const MemberCard = ({ member, isDarkMode }) => {
           </div>
         </div>
         
-        <div className={`text-center p-3 rounded-lg border transition-all duration-300 ${
+        <div className={`text-center p-2 md:p-3 rounded-lg border transition-all duration-300 ${
           isDarkMode 
             ? 'bg-slate-700/30 border-slate-600/30' 
             : 'bg-gray-100/60 border-gray-300/30'
         }`}>
-          <div className={`text-lg font-bold transition-colors duration-300 ${getSuccessRateColor(successRate)}`}>
+          <div className={`text-base md:text-lg font-bold transition-colors duration-300 ${getSuccessRateColor(successRate)}`}>
             {successRate}%
           </div>
           <div className={`text-xs transition-colors duration-300 ${
             isDarkMode ? 'text-gray-400' : 'text-gray-600'
           }`}>
-            Success Rate
+            <span className="hidden sm:inline">Success Rate</span>
+            <span className="sm:hidden">Rate</span>
           </div>
         </div>
 
-        <div className={`text-center p-3 rounded-lg border transition-all duration-300 ${
+        <div className={`text-center p-2 md:p-3 rounded-lg border transition-all duration-300 ${
           isDarkMode 
             ? 'bg-slate-700/30 border-slate-600/30' 
             : 'bg-gray-100/60 border-gray-300/30'
         }`}>
-          <div className={`text-lg font-bold transition-colors duration-300 ${getStreakColor(currentStreak)}`}>
+          <div className={`text-base md:text-lg font-bold transition-colors duration-300 ${getStreakColor(currentStreak)}`}>
             {currentStreak}
           </div>
           <div className={`text-xs transition-colors duration-300 ${
@@ -225,33 +229,34 @@ const MemberCard = ({ member, isDarkMode }) => {
         </div>
       </div>
 
-      {/* Additional Stats (if available from real data) */}
-      {isRealData && (
-        <div className="grid grid-cols-2 gap-3 mb-4">
+      {/* Additional Stats - Mobile Responsive */}
+      {isRealData && (rank || questionsAttempted !== null) && (
+        <div className="grid grid-cols-2 gap-2 md:gap-3 mb-4">
           {rank && (
-            <div className={`text-center p-3 rounded-lg border transition-all duration-300 ${
+            <div className={`text-center p-2 md:p-3 rounded-lg border transition-all duration-300 ${
               isDarkMode 
                 ? 'bg-slate-700/30 border-slate-600/30' 
                 : 'bg-gray-100/60 border-gray-300/30'
             }`}>
-              <div className={`text-lg font-bold transition-colors duration-300 ${getRankColor(rank)}`}>
+              <div className={`text-base md:text-lg font-bold transition-colors duration-300 ${getRankColor(rank)}`}>
                 #{rank}
               </div>
               <div className={`text-xs transition-colors duration-300 ${
                 isDarkMode ? 'text-gray-400' : 'text-gray-600'
               }`}>
-                Group Rank
+                <span className="hidden sm:inline">Group Rank</span>
+                <span className="sm:hidden">Rank</span>
               </div>
             </div>
           )}
           
           {questionsAttempted !== null && (
-            <div className={`text-center p-3 rounded-lg border transition-all duration-300 ${
+            <div className={`text-center p-2 md:p-3 rounded-lg border transition-all duration-300 ${
               isDarkMode 
                 ? 'bg-slate-700/30 border-slate-600/30' 
                 : 'bg-gray-100/60 border-gray-300/30'
             }`}>
-              <div className={`text-lg font-bold transition-colors duration-300 ${
+              <div className={`text-base md:text-lg font-bold transition-colors duration-300 ${
                 isDarkMode ? 'text-blue-400' : 'text-blue-600'
               }`}>
                 {questionsAttempted}
@@ -266,33 +271,35 @@ const MemberCard = ({ member, isDarkMode }) => {
         </div>
       )}
 
-      {/* Average Time (if available) */}
+      {/* Average Time - Mobile Responsive */}
       {averageTimeToSolve && (
-        <div className={`text-center p-3 rounded-lg border mb-4 transition-all duration-300 ${
+        <div className={`text-center p-2 md:p-3 rounded-lg border mb-4 transition-all duration-300 ${
           isDarkMode 
             ? 'bg-blue-500/10 border-blue-500/30' 
             : 'bg-blue-100/60 border-blue-300/30'
         }`}>
-          <div className={`flex items-center justify-center text-sm font-medium transition-colors duration-300 ${
+          <div className={`flex items-center justify-center text-xs md:text-sm font-medium transition-colors duration-300 ${
             isDarkMode ? 'text-blue-300' : 'text-blue-700'
           }`}>
             <Clock className="w-3 h-3 mr-1" />
-            Avg. Time: {averageTimeToSolve} min
+            <span className="hidden sm:inline">Avg. Time: {averageTimeToSolve} min</span>
+            <span className="sm:hidden">{averageTimeToSolve}min avg</span>
           </div>
         </div>
       )}
 
-      {/* Achievement Badges */}
+      {/* Achievement Badges - Mobile Responsive */}
       {(successRate >= 90 || problemsSolved >= 30 || currentStreak >= 10) && (
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-1 md:gap-2 mb-4">
           {successRate >= 90 && (
             <div className={`flex items-center px-2 py-1 rounded-full text-xs font-medium border transition-all duration-300 ${
               isDarkMode 
                 ? 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30' 
                 : 'bg-yellow-100 text-yellow-700 border-yellow-300'
             }`}>
-              <Trophy className="w-3 h-3 mr-1" />
-              High Achiever
+              <Trophy className="w-2 h-2 md:w-3 md:h-3 mr-1" />
+              <span className="hidden sm:inline">High Achiever</span>
+              <span className="sm:hidden">🏆</span>
             </div>
           )}
           {problemsSolved >= 30 && (
@@ -301,8 +308,9 @@ const MemberCard = ({ member, isDarkMode }) => {
                 ? 'bg-green-500/20 text-green-300 border-green-500/30' 
                 : 'bg-green-100 text-green-700 border-green-300'
             }`}>
-              <Target className="w-3 h-3 mr-1" />
-              Problem Solver
+              <Target className="w-2 h-2 md:w-3 md:h-3 mr-1" />
+              <span className="hidden sm:inline">Problem Solver</span>
+              <span className="sm:hidden">🎯</span>
             </div>
           )}
           {currentStreak >= 10 && (
@@ -311,7 +319,8 @@ const MemberCard = ({ member, isDarkMode }) => {
                 ? 'bg-orange-500/20 text-orange-300 border-orange-500/30' 
                 : 'bg-orange-100 text-orange-700 border-orange-300'
             }`}>
-              🔥 On Fire
+              <span className="hidden sm:inline">🔥 On Fire</span>
+              <span className="sm:hidden">🔥</span>
             </div>
           )}
           {rank === 1 && (
@@ -320,14 +329,15 @@ const MemberCard = ({ member, isDarkMode }) => {
                 ? 'bg-purple-500/20 text-purple-300 border-purple-500/30' 
                 : 'bg-purple-100 text-purple-700 border-purple-300'
             }`}>
-              <Award className="w-3 h-3 mr-1" />
-              Top Performer
+              <Award className="w-2 h-2 md:w-3 md:h-3 mr-1" />
+              <span className="hidden sm:inline">Top Performer</span>
+              <span className="sm:hidden">👑</span>
             </div>
           )}
         </div>
       )}
 
-      {/* Activity Info */}
+      {/* Activity Info - Mobile Responsive */}
       <div className={`rounded-lg p-3 mb-4 border transition-all duration-300 ${
         isDarkMode 
           ? 'bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-purple-500/20' 
@@ -338,13 +348,17 @@ const MemberCard = ({ member, isDarkMode }) => {
             <span className={`flex items-center transition-colors duration-300 ${
               isDarkMode ? 'text-gray-400' : 'text-gray-600'
             }`}>
-              <Calendar className="w-3 h-3 mr-2" />
-              Joined
+              <Calendar className="w-3 h-3 mr-1 md:mr-2" />
+              <span className="hidden sm:inline">Joined</span>
+              <span className="sm:hidden">Join</span>
             </span>
-            <span className={`font-medium transition-colors duration-300 ${
+            <span className={`font-medium transition-colors duration-300 text-xs ${
               isDarkMode ? 'text-white' : 'text-gray-900'
             }`}>
-              {new Date(member.joinedAt).toLocaleDateString()}
+              {new Date(member.joinedAt).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric'
+              })}
             </span>
           </div>
           
@@ -353,13 +367,17 @@ const MemberCard = ({ member, isDarkMode }) => {
               <span className={`flex items-center transition-colors duration-300 ${
                 isDarkMode ? 'text-gray-400' : 'text-gray-600'
               }`}>
-                <Activity className="w-3 h-3 mr-2" />
-                Last Active
+                <Activity className="w-3 h-3 mr-1 md:mr-2" />
+                <span className="hidden sm:inline">Last Active</span>
+                <span className="sm:hidden">Active</span>
               </span>
-              <span className={`font-medium transition-colors duration-300 ${
+              <span className={`font-medium transition-colors duration-300 text-xs ${
                 isDarkMode ? 'text-white' : 'text-gray-900'
               }`}>
-                {new Date(member.lastActive).toLocaleDateString()}
+                {new Date(member.lastActive).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric'
+                })}
               </span>
             </div>
           )}
@@ -369,9 +387,9 @@ const MemberCard = ({ member, isDarkMode }) => {
               <span className={`flex items-center transition-colors duration-300 ${
                 isDarkMode ? 'text-gray-400' : 'text-gray-600'
               }`}>
-                📝 Progress
+                📝 <span className="ml-1 hidden sm:inline">Progress</span>
               </span>
-              <span className={`font-medium transition-colors duration-300 ${
+              <span className={`font-medium transition-colors duration-300 text-xs ${
                 isDarkMode ? 'text-white' : 'text-gray-900'
               }`}>
                 {questionsAttempted}/{totalQuestions}
@@ -381,8 +399,8 @@ const MemberCard = ({ member, isDarkMode }) => {
         </div>
       </div>
 
-      {/* Member Actions */}
-      <div className={`pt-4 border-t transition-all duration-300 ${
+      {/* Member Actions - Mobile Responsive */}
+      <div className={`pt-3 md:pt-4 border-t transition-all duration-300 ${
         isDarkMode ? 'border-slate-600/30' : 'border-gray-300/30'
       }`}>
         <div className="flex items-center justify-between">
@@ -399,18 +417,21 @@ const MemberCard = ({ member, isDarkMode }) => {
               ? 'text-purple-400 hover:text-purple-300' 
               : 'text-purple-600 hover:text-purple-700'
           }`}>
-            View Profile
+            <span className="hidden sm:inline">View Profile</span>
+            <span className="sm:inline hidden">Profile</span>
+            <span className="sm:hidden">👤</span>
           </button>
         </div>
       </div>
 
-      {/* Progress Bar for Activity Level */}
+      {/* Progress Bar for Activity Level - Mobile Responsive */}
       <div className="mt-3">
         <div className="flex justify-between items-center mb-1">
           <span className={`text-xs transition-colors duration-300 ${
             isDarkMode ? 'text-gray-400' : 'text-gray-600'
           }`}>
-            Activity Level
+            <span className="hidden sm:inline">Activity Level</span>
+            <span className="sm:hidden">Activity</span>
           </span>
           <span className={`text-xs font-medium transition-colors duration-300 ${
             isDarkMode ? 'text-white' : 'text-gray-900'

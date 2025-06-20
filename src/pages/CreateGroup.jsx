@@ -23,7 +23,10 @@ import {
   Sun,
   Moon,
   Sparkles,
-  LogOut
+  LogOut,
+  Menu,
+  X,
+  ChevronRight
 } from 'lucide-react';
 
 const CreateGroup = () => {
@@ -36,6 +39,7 @@ const CreateGroup = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const { user, isAuthenticated } = useSelector((state) => state.auth);
   const { isDarkMode } = useSelector((state) => state.theme);
@@ -163,14 +167,15 @@ const CreateGroup = () => {
         }}
       ></div>
 
-      {/* Header */}
+      {/* Header - Mobile Responsive */}
       <header className={`relative z-20 backdrop-blur-sm transition-all duration-300 ${
         isDarkMode 
           ? 'border-b border-slate-700/50' 
           : 'border-b border-gray-200/50'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+          {/* Desktop & Tablet Header */}
+          <div className="hidden md:flex justify-between items-center h-20">
             {/* Logo - Clickable */}
             <button
               onClick={() => navigate('/')}
@@ -201,6 +206,19 @@ const CreateGroup = () => {
 
             {/* User Info & Actions */}
             <div className="flex items-center space-x-6">
+              {/* Back Button */}
+              <button
+                onClick={() => navigate('/dashboard')}
+                className={`flex items-center px-4 py-2 rounded-lg border transition-all cursor-pointer hover:scale-105 active:scale-95 group ${
+                  isDarkMode 
+                    ? 'bg-slate-700/50 text-gray-300 border-slate-600/50 hover:bg-slate-600/50' 
+                    : 'bg-gray-100/80 text-gray-700 border-gray-300/50 hover:bg-gray-200/80'
+                }`}
+              >
+                <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+                Back
+              </button>
+
               {/* Theme Toggle Button */}
               <button
                 onClick={handleThemeToggle}
@@ -256,32 +274,169 @@ const CreateGroup = () => {
               </button>
             </div>
           </div>
+
+          {/* Mobile Header */}
+          <div className="md:hidden flex justify-between items-center h-16">
+            {/* Mobile Logo */}
+            <button
+              onClick={() => navigate('/')}
+              className="flex items-center space-x-2 cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200 group"
+            >
+              <div className="relative">
+                <Code2 className={`w-6 h-6 transition-colors duration-300 ${
+                  isDarkMode ? 'text-purple-400' : 'text-purple-600'
+                }`} />
+                <div className={`absolute -top-1 -right-1 w-2 h-2 rounded-full animate-ping ${
+                  isDarkMode ? 'bg-pink-400' : 'bg-pink-500'
+                }`}></div>
+              </div>
+              <div>
+                <h1 className={`text-lg font-bold bg-gradient-to-r bg-clip-text text-transparent transition-colors duration-300 ${
+                  isDarkMode 
+                    ? 'from-purple-400 to-pink-400' 
+                    : 'from-purple-600 to-pink-600'
+                }`}>
+                  CodeBuddy
+                </h1>
+              </div>
+            </button>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className={`p-2 rounded-lg transition-all duration-300 ${
+                isDarkMode 
+                  ? 'bg-slate-800/80 border border-slate-600/50 text-white' 
+                  : 'bg-white/80 border border-gray-200/50 text-gray-900'
+              }`}
+              aria-label="Toggle mobile menu"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          </div>
+
+          {/* Mobile Menu Dropdown */}
+          {isMobileMenuOpen && (
+            <div className={`md:hidden absolute top-full left-0 right-0 backdrop-blur-sm border-t transition-all duration-300 z-50 ${
+              isDarkMode 
+                ? 'bg-slate-900/95 border-slate-700/50' 
+                : 'bg-white/95 border-gray-200/50'
+            }`}>
+              <div className="px-4 py-6 space-y-4 max-h-screen overflow-y-auto">
+                {/* Mobile User Info */}
+                <div className={`flex items-center space-x-3 pb-4 border-b ${
+                  isDarkMode ? 'border-slate-700/50' : 'border-gray-200/50'
+                }`}>
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+                    <span className="text-white font-semibold text-lg">
+                      {user?.name?.charAt(0)?.toUpperCase()}
+                    </span>
+                  </div>
+                  <div>
+                    <p className={`font-medium transition-colors duration-300 ${
+                      isDarkMode ? 'text-white' : 'text-gray-900'
+                    }`}>Creating as,</p>
+                    <p className={`text-sm transition-colors duration-300 ${
+                      isDarkMode ? 'text-purple-300' : 'text-purple-600'
+                    }`}>{user?.name}</p>
+                  </div>
+                </div>
+
+                {/* Mobile Back to Dashboard */}
+                <button
+                  onClick={() => {
+                    navigate('/dashboard');
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between p-4 rounded-xl transition-all duration-300 ${
+                    isDarkMode 
+                      ? 'bg-slate-800/50 border border-slate-600/30 text-white' 
+                      : 'bg-gray-100 border border-gray-200 text-gray-900'
+                  }`}
+                >
+                  <span className="flex items-center">
+                    <ArrowLeft className="w-5 h-5 mr-3" />
+                    <span className="font-medium">Back to Dashboard</span>
+                  </span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+
+                {/* Mobile Theme Toggle */}
+                <button
+                  onClick={() => {
+                    handleThemeToggle();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between p-4 rounded-xl transition-all duration-300 ${
+                    isDarkMode 
+                      ? 'bg-slate-800/50 border border-slate-600/30 text-white' 
+                      : 'bg-gray-100 border border-gray-200 text-gray-900'
+                  }`}
+                >
+                  <span className="flex items-center">
+                    {isDarkMode ? (
+                      <Sun className="w-5 h-5 text-yellow-500 mr-3" />
+                    ) : (
+                      <Moon className="w-5 h-5 text-purple-600 mr-3" />
+                    )}
+                    <span className="font-medium">
+                      Switch to {isDarkMode ? 'Light' : 'Dark'} Mode
+                    </span>
+                  </span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+
+                {/* Mobile Logout */}
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all duration-300 ${
+                    isDarkMode 
+                      ? 'bg-red-500/20 text-red-300 border-red-500/30' 
+                      : 'bg-red-100 text-red-600 border-red-200'
+                  }`}
+                >
+                  <span className="flex items-center">
+                    <LogOut className="w-5 h-5 mr-3" />
+                    <span className="font-medium">Logout</span>
+                  </span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="relative z-10 max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-3 gap-8 items-start">
-          {/* Left Column - Main Form (2/3 width) */}
+      {/* Main Content - Mobile Responsive */}
+      <main className="relative z-10 max-w-7xl mx-auto py-6 md:py-12 px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-3 gap-6 lg:gap-8 items-start">
+          {/* Left Column - Main Form (Mobile: full width, Desktop: 2/3 width) */}
           <div className="lg:col-span-2">
-            <div className={`backdrop-blur-sm border rounded-3xl p-10 shadow-2xl transition-all duration-300 ${
+            <div className={`backdrop-blur-sm border rounded-2xl lg:rounded-3xl p-6 md:p-10 shadow-2xl transition-all duration-300 ${
               isDarkMode 
                 ? 'bg-slate-800/30 border-slate-600/30' 
                 : 'bg-white/40 border-gray-200/30'
             }`}>
               {/* Form Header */}
-              <div className="text-center mb-10">
-                <div className="w-20 h-20 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-500/25">
-                  <Plus className="w-10 h-10 text-white" />
+              <div className="text-center mb-8 md:mb-10">
+                <div className="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl md:rounded-3xl flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-lg shadow-purple-500/25">
+                  <Plus className="w-8 h-8 md:w-10 md:h-10 text-white" />
                 </div>
-                <h2 className={`text-4xl font-bold bg-gradient-to-r bg-clip-text text-transparent mb-3 transition-colors duration-300 ${
+                <h2 className={`text-2xl md:text-4xl font-bold bg-gradient-to-r bg-clip-text text-transparent mb-2 md:mb-3 transition-colors duration-300 ${
                   isDarkMode 
                     ? 'from-white to-purple-200' 
                     : 'from-gray-900 to-purple-800'
                 }`}>
                   Create New Group
                 </h2>
-                <p className={`text-lg transition-colors duration-300 ${
+                <p className={`text-base md:text-lg transition-colors duration-300 ${
                   isDarkMode ? 'text-gray-400' : 'text-gray-600'
                 }`}>
                   Start a new coding group and invite your friends to practice together!
@@ -290,26 +445,26 @@ const CreateGroup = () => {
 
               {/* Error Message */}
               {error && (
-                <div className={`mb-8 p-5 border rounded-xl ${
+                <div className={`mb-6 md:mb-8 p-4 md:p-5 border rounded-xl ${
                   isDarkMode 
                     ? 'bg-red-500/10 border-red-500/20' 
                     : 'bg-red-50 border-red-200'
                 }`}>
                   <div className="flex items-center">
-                    <Zap className={`w-6 h-6 mr-4 ${
+                    <Zap className={`w-5 h-5 md:w-6 md:h-6 mr-3 md:mr-4 ${
                       isDarkMode ? 'text-red-400' : 'text-red-600'
                     }`} />
-                    <p className={`${
+                    <p className={`text-sm md:text-base ${
                       isDarkMode ? 'text-red-300' : 'text-red-700'
                     }`}>{error}</p>
                   </div>
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-8">
+              <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
                 {/* Group Name */}
                 <div>
-                  <label className={`block text-lg font-medium mb-4 transition-colors duration-300 ${
+                  <label className={`block text-base md:text-lg font-medium mb-3 md:mb-4 transition-colors duration-300 ${
                     isDarkMode ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Group Name *
@@ -323,20 +478,20 @@ const CreateGroup = () => {
                       required
                       minLength={3}
                       maxLength={100}
-                      className={`w-full px-6 py-4 text-lg border rounded-xl focus:outline-none transition-all duration-300 pr-14 ${
+                      className={`w-full px-4 md:px-6 py-3 md:py-4 text-base md:text-lg border rounded-xl focus:outline-none transition-all duration-300 pr-12 md:pr-14 ${
                         isDarkMode 
                           ? 'bg-slate-700/50 border-slate-600/50 text-white placeholder-gray-400 focus:border-purple-400' 
                           : 'bg-white/70 border-gray-300/50 text-gray-900 placeholder-gray-500 focus:border-purple-500'
                       }`}
                       placeholder="Enter group name (3-100 characters)"
                     />
-                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                      <Users className={`w-6 h-6 ${
+                    <div className="absolute right-3 md:right-4 top-1/2 transform -translate-y-1/2">
+                      <Users className={`w-5 h-5 md:w-6 md:h-6 ${
                         isDarkMode ? 'text-gray-400' : 'text-gray-500'
                       }`} />
                     </div>
                   </div>
-                  <p className={`text-sm mt-3 transition-colors duration-300 ${
+                  <p className={`text-sm mt-2 md:mt-3 transition-colors duration-300 ${
                     isDarkMode ? 'text-gray-500' : 'text-gray-600'
                   }`}>
                     {formData.name.length}/100 characters
@@ -345,7 +500,7 @@ const CreateGroup = () => {
 
                 {/* Description */}
                 <div>
-                  <label className={`block text-lg font-medium mb-4 transition-colors duration-300 ${
+                  <label className={`block text-base md:text-lg font-medium mb-3 md:mb-4 transition-colors duration-300 ${
                     isDarkMode ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Description
@@ -354,30 +509,30 @@ const CreateGroup = () => {
                     name="description"
                     value={formData.description}
                     onChange={handleChange}
-                    rows={5}
+                    rows={4}
                     maxLength={500}
-                    className={`w-full px-6 py-4 text-lg border rounded-xl focus:outline-none transition-all duration-300 resize-none ${
+                    className={`w-full px-4 md:px-6 py-3 md:py-4 text-base md:text-lg border rounded-xl focus:outline-none transition-all duration-300 resize-none ${
                       isDarkMode 
                         ? 'bg-slate-700/50 border-slate-600/50 text-white placeholder-gray-400 focus:border-purple-400' 
                         : 'bg-white/70 border-gray-300/50 text-gray-900 placeholder-gray-500 focus:border-purple-500'
                     }`}
                     placeholder="Describe your group's purpose and goals (optional)"
                   />
-                  <p className={`text-sm mt-3 transition-colors duration-300 ${
+                  <p className={`text-sm mt-2 md:mt-3 transition-colors duration-300 ${
                     isDarkMode ? 'text-gray-500' : 'text-gray-600'
                   }`}>
                     {formData.description.length}/500 characters
                   </p>
                 </div>
 
-                {/* Category */}
+                {/* Category - Mobile Responsive Grid */}
                 <div>
-                  <label className={`block text-lg font-medium mb-4 transition-colors duration-300 ${
+                  <label className={`block text-base md:text-lg font-medium mb-3 md:mb-4 transition-colors duration-300 ${
                     isDarkMode ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Category
                   </label>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                     {categories.map((category) => {
                       const IconComponent = category.icon;
                       const isSelected = formData.category === category.value;
@@ -386,7 +541,7 @@ const CreateGroup = () => {
                           key={category.value}
                           type="button"
                           onClick={() => setFormData(prev => ({ ...prev, category: category.value }))}
-                          className={`p-5 rounded-xl border transition-all duration-300 text-left group cursor-pointer hover:scale-105 active:scale-95 ${
+                          className={`p-4 md:p-5 rounded-xl border transition-all duration-300 text-left group cursor-pointer hover:scale-105 active:scale-95 ${
                             isSelected 
                               ? isDarkMode
                                 ? 'bg-purple-600/20 border-purple-500/50 text-purple-200' 
@@ -396,8 +551,8 @@ const CreateGroup = () => {
                                 : 'bg-white/60 border-gray-300/40 text-gray-700 hover:border-purple-400/50 hover:bg-purple-100/50'
                           }`}
                         >
-                          <div className="flex items-center space-x-4">
-                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300 ${
+                          <div className="flex items-center space-x-3 md:space-x-4">
+                            <div className={`w-8 h-8 md:w-10 md:h-10 rounded-lg flex items-center justify-center transition-all duration-300 ${
                               isSelected 
                                 ? isDarkMode
                                   ? 'bg-purple-500/30' 
@@ -406,9 +561,9 @@ const CreateGroup = () => {
                                   ? 'bg-slate-600/50 group-hover:bg-purple-500/20'
                                   : 'bg-gray-200/60 group-hover:bg-purple-200/60'
                             }`}>
-                              <IconComponent className="w-5 h-5" />
+                              <IconComponent className="w-4 h-4 md:w-5 md:h-5" />
                             </div>
-                            <span className="font-medium">{category.value}</span>
+                            <span className="font-medium text-sm md:text-base">{category.value}</span>
                           </div>
                         </button>
                       );
@@ -416,20 +571,20 @@ const CreateGroup = () => {
                   </div>
                 </div>
 
-                {/* Privacy Settings */}
+                {/* Privacy Settings - Mobile Responsive */}
                 <div className="space-y-4">
-                  <label className={`block text-lg font-medium transition-colors duration-300 ${
+                  <label className={`block text-base md:text-lg font-medium transition-colors duration-300 ${
                     isDarkMode ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     Privacy Settings
                   </label>
                   
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                     {/* Public Option */}
                     <button
                       type="button"
                       onClick={() => setFormData(prev => ({ ...prev, isPrivate: false }))}
-                      className={`p-6 rounded-xl border transition-all duration-300 text-left cursor-pointer hover:scale-105 active:scale-95 ${
+                      className={`p-4 md:p-6 rounded-xl border transition-all duration-300 text-left cursor-pointer hover:scale-105 active:scale-95 ${
                         !formData.isPrivate
                           ? isDarkMode
                             ? 'bg-green-600/20 border-green-500/50 text-green-200'
@@ -439,18 +594,18 @@ const CreateGroup = () => {
                             : 'bg-white/60 border-gray-300/40 text-gray-700 hover:border-green-400/50'
                       }`}
                     >
-                      <div className="flex items-center space-x-4 mb-3">
-                        <Globe className="w-6 h-6" />
-                        <span className="font-medium text-lg">Public</span>
+                      <div className="flex items-center space-x-3 md:space-x-4 mb-2 md:mb-3">
+                        <Globe className="w-5 h-5 md:w-6 md:h-6" />
+                        <span className="font-medium text-base md:text-lg">Public</span>
                       </div>
-                      <p className="text-sm opacity-80">Anyone can discover and join this group</p>
+                      <p className="text-xs md:text-sm opacity-80">Anyone can discover and join this group</p>
                     </button>
 
                     {/* Private Option */}
                     <button
                       type="button"
                       onClick={() => setFormData(prev => ({ ...prev, isPrivate: true }))}
-                      className={`p-6 rounded-xl border transition-all duration-300 text-left cursor-pointer hover:scale-105 active:scale-95 ${
+                      className={`p-4 md:p-6 rounded-xl border transition-all duration-300 text-left cursor-pointer hover:scale-105 active:scale-95 ${
                         formData.isPrivate
                           ? isDarkMode
                             ? 'bg-red-600/20 border-red-500/50 text-red-200'
@@ -460,21 +615,21 @@ const CreateGroup = () => {
                             : 'bg-white/60 border-gray-300/40 text-gray-700 hover:border-red-400/50'
                       }`}
                     >
-                      <div className="flex items-center space-x-4 mb-3">
-                        <Lock className="w-6 h-6" />
-                        <span className="font-medium text-lg">Private</span>
+                      <div className="flex items-center space-x-3 md:space-x-4 mb-2 md:mb-3">
+                        <Lock className="w-5 h-5 md:w-6 md:h-6" />
+                        <span className="font-medium text-base md:text-lg">Private</span>
                       </div>
-                      <p className="text-sm opacity-80">Invite only access with group code</p>
+                      <p className="text-xs md:text-sm opacity-80">Invite only access with group code</p>
                     </button>
                   </div>
                 </div>
 
-                {/* Submit Buttons */}
-                <div className="flex gap-6 pt-8">
+                {/* Submit Buttons - Mobile Responsive */}
+                <div className="flex flex-col sm:flex-row gap-4 md:gap-6 pt-6 md:pt-8">
                   <button
                     type="button"
                     onClick={() => navigate('/dashboard')}
-                    className={`flex-1 px-8 py-4 text-lg border rounded-xl transition-all cursor-pointer hover:scale-105 active:scale-95 ${
+                    className={`flex-1 px-6 md:px-8 py-3 md:py-4 text-base md:text-lg border rounded-xl transition-all cursor-pointer hover:scale-105 active:scale-95 ${
                       isDarkMode 
                         ? 'bg-slate-700/50 text-gray-300 border-slate-600/50 hover:bg-slate-600/50' 
                         : 'bg-gray-100/80 text-gray-700 border-gray-300/50 hover:bg-gray-200/80'
@@ -486,17 +641,17 @@ const CreateGroup = () => {
                   <button
                     type="submit"
                     disabled={loading || !formData.name.trim()}
-                    className="flex-1 px-8 py-4 text-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center group cursor-pointer hover:scale-105 active:scale-95"
+                    className="flex-1 px-6 md:px-8 py-3 md:py-4 text-base md:text-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center group cursor-pointer hover:scale-105 active:scale-95"
                   >
                     {loading ? (
                       <>
-                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-3"></div>
+                        <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2 md:mr-3"></div>
                         Creating...
                       </>
                     ) : (
                       <>
                         Create Group
-                        <ArrowRight className="w-5 h-5 ml-3 group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="w-4 h-4 md:w-5 md:h-5 ml-2 md:ml-3 group-hover:translate-x-1 transition-transform" />
                       </>
                     )}
                   </button>
@@ -505,8 +660,8 @@ const CreateGroup = () => {
             </div>
           </div>
 
-          {/* Right Column - Preview & Tips (1/3 width) */}
-          <div className="lg:col-span-1 space-y-6">
+          {/* Right Column - Preview & Tips (Mobile: hidden on small screens, visible on lg+) */}
+          <div className="hidden lg:block lg:col-span-1 space-y-6">
             {/* Group Preview */}
             <div className={`backdrop-blur-sm border rounded-2xl p-6 transition-all duration-300 ${
               isDarkMode 
@@ -690,6 +845,73 @@ const CreateGroup = () => {
                   <span className={`transition-colors duration-300 ${
                     isDarkMode ? 'text-gray-400' : 'text-gray-600'
                   }`}>Practice and learn together!</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Preview Section - Only visible on mobile */}
+        <div className="lg:hidden mt-8">
+          <div className={`backdrop-blur-sm border rounded-2xl p-6 transition-all duration-300 ${
+            isDarkMode 
+              ? 'bg-slate-800/30 border-slate-600/30' 
+              : 'bg-white/40 border-gray-200/30'
+          }`}>
+            <h3 className={`text-lg font-bold mb-4 flex items-center transition-colors duration-300 ${
+              isDarkMode ? 'text-white' : 'text-gray-900'
+            }`}>
+              <Star className="w-5 h-5 text-yellow-400 mr-2" />
+              Preview
+            </h3>
+            
+            <div className={`rounded-xl p-4 border transition-all duration-300 ${
+              isDarkMode 
+                ? 'bg-slate-700/30 border-slate-600/30' 
+                : 'bg-gray-100/60 border-gray-300/30'
+            }`}>
+              <div className="mb-3">
+                <h4 className={`text-base font-bold mb-1 transition-colors duration-300 ${
+                  isDarkMode ? 'text-white' : 'text-gray-900'
+                }`}>
+                  {formData.name || 'Your Group Name'}
+                </h4>
+                <p className={`text-sm transition-colors duration-300 ${
+                  isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                }`}>
+                  {formData.description || 'Your group description...'}
+                </p>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <div className={`flex items-center px-2 py-1 rounded-full text-xs font-medium border ${
+                  formData.isPrivate 
+                    ? isDarkMode
+                      ? 'bg-red-500/20 text-red-300 border-red-500/30' 
+                      : 'bg-red-100 text-red-700 border-red-300'
+                    : isDarkMode
+                      ? 'bg-green-500/20 text-green-300 border-green-500/30'
+                      : 'bg-green-100 text-green-700 border-green-300'
+                }`}>
+                  {formData.isPrivate ? (
+                    <>
+                      <Lock className="w-3 h-3 mr-1" />
+                      Private
+                    </>
+                  ) : (
+                    <>
+                      <Globe className="w-3 h-3 mr-1" />
+                      Public
+                    </>
+                  )}
+                </div>
+                <div className={`flex items-center px-2 py-1 rounded-full text-xs border transition-all duration-300 ${
+                  isDarkMode 
+                    ? 'bg-purple-500/20 text-purple-300 border-purple-500/30' 
+                    : 'bg-purple-100 text-purple-700 border-purple-300'
+                }`}>
+                  {React.createElement(getCategoryIcon(formData.category), { className: "w-3 h-3 mr-1" })}
+                  {formData.category}
                 </div>
               </div>
             </div>

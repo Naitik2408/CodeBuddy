@@ -21,7 +21,10 @@ import {
   LogOut,
   Sun,
   Moon,
-  Sparkles
+  Sparkles,
+  Menu,
+  X,
+  ChevronRight
 } from 'lucide-react';
 
 // Import the separated components
@@ -49,6 +52,7 @@ const GroupPage = () => {
   const [difficultyFilter, setDifficultyFilter] = useState('all');
   const [copiedInvite, setCopiedInvite] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   // Modal states
   const [selectedQuestion, setSelectedQuestion] = useState(null);
@@ -296,14 +300,15 @@ const GroupPage = () => {
         }}
       ></div>
 
-      {/* Header */}
+      {/* Header - Mobile Responsive */}
       <header className={`relative z-20 backdrop-blur-sm transition-all duration-300 ${
         isDarkMode 
           ? 'border-b border-slate-700/50' 
           : 'border-b border-gray-200/50'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+          {/* Desktop & Tablet Header */}
+          <div className="hidden md:flex justify-between items-center h-20">
             {/* Logo - Clickable */}
             <button
               onClick={() => navigate('/')}
@@ -334,6 +339,19 @@ const GroupPage = () => {
 
             {/* User Info & Actions */}
             <div className="flex items-center space-x-6">
+              {/* Back Button */}
+              <button
+                onClick={() => navigate('/dashboard')}
+                className={`flex items-center px-4 py-2 rounded-lg border transition-all cursor-pointer hover:scale-105 active:scale-95 group ${
+                  isDarkMode 
+                    ? 'bg-slate-700/50 text-gray-300 border-slate-600/50 hover:bg-slate-600/50' 
+                    : 'bg-gray-100/80 text-gray-700 border-gray-300/50 hover:bg-gray-200/80'
+                }`}
+              >
+                <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
+                Back
+              </button>
+
               {/* Theme Toggle Button */}
               <button
                 onClick={handleThemeToggle}
@@ -375,7 +393,7 @@ const GroupPage = () => {
                 </div>
               </div>
 
-              {/* Group Actions */}
+              {/* Copy Invite Code */}
               {group?.inviteCode && (
                 <button
                   onClick={copyInviteCode}
@@ -385,7 +403,7 @@ const GroupPage = () => {
                       : 'bg-green-100 text-green-700 border-green-300 hover:bg-green-200'
                   }`}
                 >
-                  {copiedInvite ? <Check className="w-4 h-4 mr-2 group-hover:animate-pulse" /> : <Copy className="w-4 h-4 mr-2 group-hover:animate-pulse" />}
+                  {copiedInvite ? <Check className="w-4 h-4 mr-2" /> : <Copy className="w-4 h-4 mr-2" />}
                   {copiedInvite ? 'Copied!' : 'Copy Invite'}
                 </button>
               )}
@@ -418,74 +436,282 @@ const GroupPage = () => {
               )}
             </div>
           </div>
+
+          {/* Mobile Header */}
+          <div className="md:hidden flex justify-between items-center h-16">
+            {/* Mobile Logo */}
+            <button
+              onClick={() => navigate('/')}
+              className="flex items-center space-x-2 cursor-pointer hover:scale-105 active:scale-95 transition-all duration-200 group"
+            >
+              <div className="relative">
+                <Code2 className={`w-6 h-6 transition-colors duration-300 ${
+                  isDarkMode ? 'text-purple-400' : 'text-purple-600'
+                }`} />
+                <div className={`absolute -top-1 -right-1 w-2 h-2 rounded-full animate-ping ${
+                  isDarkMode ? 'bg-pink-400' : 'bg-pink-500'
+                }`}></div>
+              </div>
+              <div>
+                <h1 className={`text-lg font-bold bg-gradient-to-r bg-clip-text text-transparent transition-colors duration-300 ${
+                  isDarkMode 
+                    ? 'from-purple-400 to-pink-400' 
+                    : 'from-purple-600 to-pink-600'
+                }`}>
+                  CodeBuddy
+                </h1>
+              </div>
+            </button>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className={`p-2 rounded-lg transition-all duration-300 ${
+                isDarkMode 
+                  ? 'bg-slate-800/80 border border-slate-600/50 text-white' 
+                  : 'bg-white/80 border border-gray-200/50 text-gray-900'
+              }`}
+              aria-label="Toggle mobile menu"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+          </div>
+
+          {/* Mobile Menu Dropdown */}
+          {isMobileMenuOpen && (
+            <div className={`md:hidden absolute top-full left-0 right-0 backdrop-blur-sm border-t transition-all duration-300 z-50 ${
+              isDarkMode 
+                ? 'bg-slate-900/95 border-slate-700/50' 
+                : 'bg-white/95 border-gray-200/50'
+            }`}>
+              <div className="px-4 py-6 space-y-4 max-h-screen overflow-y-auto">
+                {/* Mobile User Info */}
+                <div className={`flex items-center space-x-3 pb-4 border-b ${
+                  isDarkMode ? 'border-slate-700/50' : 'border-gray-200/50'
+                }`}>
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+                    <span className="text-white font-semibold text-lg">
+                      {user?.name?.charAt(0)?.toUpperCase()}
+                    </span>
+                  </div>
+                  <div>
+                    <p className={`font-medium transition-colors duration-300 ${
+                      isDarkMode ? 'text-white' : 'text-gray-900'
+                    }`}>{user?.name}</p>
+                    <p className={`text-sm transition-colors duration-300 ${
+                      isDarkMode ? 'text-purple-300' : 'text-purple-600'
+                    }`}>{group?.name}</p>
+                  </div>
+                </div>
+
+                {/* Mobile Back to Dashboard */}
+                <button
+                  onClick={() => {
+                    navigate('/dashboard');
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between p-4 rounded-xl transition-all duration-300 ${
+                    isDarkMode 
+                      ? 'bg-slate-800/50 border border-slate-600/30 text-white' 
+                      : 'bg-gray-100 border border-gray-200 text-gray-900'
+                  }`}
+                >
+                  <span className="flex items-center">
+                    <ArrowLeft className="w-5 h-5 mr-3" />
+                    <span className="font-medium">Back to Dashboard</span>
+                  </span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+
+                {/* Mobile Copy Invite Code */}
+                {group?.inviteCode && (
+                  <button
+                    onClick={() => {
+                      copyInviteCode();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all duration-300 ${
+                      isDarkMode 
+                        ? 'bg-green-600/20 text-green-300 border-green-500/30' 
+                        : 'bg-green-100 text-green-700 border-green-300'
+                    }`}
+                  >
+                    <span className="flex items-center">
+                      {copiedInvite ? <Check className="w-5 h-5 mr-3" /> : <Copy className="w-5 h-5 mr-3" />}
+                      <span className="font-medium">{copiedInvite ? 'Invite Code Copied!' : 'Copy Invite Code'}</span>
+                    </span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                )}
+
+                {/* Mobile Add Question */}
+                {isMember && (
+                  <button
+                    onClick={() => {
+                      navigate(`/group/${groupId}/add-question`);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="w-full flex items-center justify-between p-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl transition-all duration-300"
+                  >
+                    <span className="flex items-center">
+                      <Plus className="w-5 h-5 mr-3" />
+                      <span className="font-medium">Add Question</span>
+                    </span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                )}
+
+                {/* Mobile Theme Toggle */}
+                <button
+                  onClick={() => {
+                    handleThemeToggle();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={`w-full flex items-center justify-between p-4 rounded-xl transition-all duration-300 ${
+                    isDarkMode 
+                      ? 'bg-slate-800/50 border border-slate-600/30 text-white' 
+                      : 'bg-gray-100 border border-gray-200 text-gray-900'
+                  }`}
+                >
+                  <span className="flex items-center">
+                    {isDarkMode ? (
+                      <Sun className="w-5 h-5 text-yellow-500 mr-3" />
+                    ) : (
+                      <Moon className="w-5 h-5 text-purple-600 mr-3" />
+                    )}
+                    <span className="font-medium">
+                      Switch to {isDarkMode ? 'Light' : 'Dark'} Mode
+                    </span>
+                  </span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+
+                {/* Mobile Leave/Logout */}
+                {!isAdmin && isMember ? (
+                  <button
+                    onClick={() => {
+                      handleLeaveGroup();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all duration-300 ${
+                      isDarkMode 
+                        ? 'bg-red-500/20 text-red-300 border-red-500/30' 
+                        : 'bg-red-100 text-red-600 border-red-200'
+                    }`}
+                  >
+                    <span className="flex items-center">
+                      <LogOut className="w-5 h-5 mr-3" />
+                      <span className="font-medium">Leave Group</span>
+                    </span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all duration-300 ${
+                      isDarkMode 
+                        ? 'bg-red-500/20 text-red-300 border-red-500/30' 
+                        : 'bg-red-100 text-red-600 border-red-200'
+                    }`}
+                  >
+                    <span className="flex items-center">
+                      <LogOut className="w-5 h-5 mr-3" />
+                      <span className="font-medium">Logout</span>
+                    </span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="relative z-10 max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        {/* Group Info Card */}
-        <div className={`backdrop-blur-sm border rounded-2xl p-6 mb-8 transition-all duration-300 ${
+      {/* Main Content - Mobile Responsive */}
+      <main className="relative z-10 max-w-7xl mx-auto py-4 md:py-8 px-4 sm:px-6 lg:px-8">
+        {/* Group Info Card - Mobile Responsive */}
+        <div className={`backdrop-blur-sm border rounded-2xl p-4 md:p-6 mb-6 md:mb-8 transition-all duration-300 ${
           isDarkMode 
             ? 'bg-slate-800/30 border-slate-600/30' 
             : 'bg-white/40 border-gray-200/30'
         }`}>
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-            <div className="flex-1">
-              <div className="flex items-center space-x-4 mb-4">
-                <div className="relative">
-                  <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
-                    <Code2 className="w-8 h-8 text-white" />
-                  </div>
-                  {isAdmin && (
-                    <div className="absolute -top-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white">
-                      <Crown className="w-3 h-3 text-white" />
-                    </div>
-                  )}
+          <div className="flex flex-col space-y-4">
+            {/* Group Header - Mobile Layout */}
+            <div className="flex items-start space-x-3 md:space-x-4">
+              <div className="relative flex-shrink-0">
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <Code2 className="w-6 h-6 md:w-8 md:h-8 text-white" />
                 </div>
-                <div>
-                  <h2 className={`text-3xl font-bold mb-2 transition-colors duration-300 ${
-                    isDarkMode ? 'text-white' : 'text-gray-900'
-                  }`}>{group.name}</h2>
-                  <p className={`text-lg transition-colors duration-300 ${
-                    isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                  }`}>{group.description || 'No description provided'}</p>
-                </div>
-              </div>
-              
-              <div className="flex flex-wrap gap-6 text-sm">
-                <span className={`flex items-center transition-colors duration-300 ${
-                  isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                }`}>
-                  <Users className="w-4 h-4 mr-2" />
-                  {members.length} members
-                </span>
-                <span className={`flex items-center transition-colors duration-300 ${
-                  isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                }`}>
-                  📂 {group.category || 'General'}
-                </span>
-                <span className={`flex items-center transition-colors duration-300 ${
-                  isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                }`}>
-                  {group.isPrivate ? '🔒 Private' : '🌐 Public'}
-                </span>
-                <span className={`flex items-center transition-colors duration-300 ${
-                  isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                }`}>
-                  📝 {questions.length} questions
-                </span>
                 {isAdmin && (
-                  <span className={`flex items-center font-medium transition-colors duration-300 ${
-                    isDarkMode ? 'text-blue-400' : 'text-blue-600'
-                  }`}>
-                    <Crown className="w-4 h-4 mr-2" />
-                    Admin
-                  </span>
+                  <div className="absolute -top-1 -right-1 w-5 h-5 md:w-6 md:h-6 bg-blue-500 rounded-full flex items-center justify-center border-2 border-white">
+                    <Crown className="w-2 h-2 md:w-3 md:h-3 text-white" />
+                  </div>
                 )}
               </div>
+              <div className="flex-1 min-w-0">
+                <h2 className={`text-xl md:text-3xl font-bold mb-1 md:mb-2 transition-colors duration-300 truncate ${
+                  isDarkMode ? 'text-white' : 'text-gray-900'
+                }`}>{group.name}</h2>
+                <p className={`text-sm md:text-lg transition-colors duration-300 line-clamp-2 ${
+                  isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                }`}>{group.description || 'No description provided'}</p>
+              </div>
+            </div>
+            
+            {/* Group Stats - Mobile Grid */}
+            <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2 md:gap-6 text-xs md:text-sm">
+              <span className={`flex items-center justify-center md:justify-start p-2 md:p-0 rounded-lg md:rounded-none transition-colors duration-300 ${
+                isDarkMode ? 'text-gray-400 md:bg-transparent bg-slate-700/30' : 'text-gray-600 md:bg-transparent bg-gray-100/60'
+              }`}>
+                <Users className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
+                {members.length} members
+              </span>
+              <span className={`flex items-center justify-center md:justify-start p-2 md:p-0 rounded-lg md:rounded-none transition-colors duration-300 ${
+                isDarkMode ? 'text-gray-400 md:bg-transparent bg-slate-700/30' : 'text-gray-600 md:bg-transparent bg-gray-100/60'
+              }`}>
+                📂 {group.category || 'General'}
+              </span>
+              <span className={`flex items-center justify-center md:justify-start p-2 md:p-0 rounded-lg md:rounded-none transition-colors duration-300 ${
+                isDarkMode ? 'text-gray-400 md:bg-transparent bg-slate-700/30' : 'text-gray-600 md:bg-transparent bg-gray-100/60'
+              }`}>
+                {group.isPrivate ? '🔒 Private' : '🌐 Public'}
+              </span>
+              <span className={`flex items-center justify-center md:justify-start p-2 md:p-0 rounded-lg md:rounded-none transition-colors duration-300 ${
+                isDarkMode ? 'text-gray-400 md:bg-transparent bg-slate-700/30' : 'text-gray-600 md:bg-transparent bg-gray-100/60'
+              }`}>
+                📝 {questions.length} questions
+              </span>
+              {isAdmin && (
+                <span className={`col-span-2 md:col-span-1 flex items-center justify-center md:justify-start p-2 md:p-0 rounded-lg md:rounded-none font-medium transition-colors duration-300 ${
+                  isDarkMode ? 'text-blue-400 md:bg-transparent bg-blue-500/20' : 'text-blue-600 md:bg-transparent bg-blue-100/60'
+                }`}>
+                  <Crown className="w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
+                  Admin
+                </span>
+              )}
             </div>
 
-            <div className="flex gap-4 mt-6 md:mt-0">
+            {/* Mobile Add Question Button */}
+            <div className="md:hidden">
+              <button
+                onClick={() => navigate(`/group/${groupId}/add-question`)}
+                disabled={!isMember}
+                className="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:scale-105 active:scale-95 group"
+              >
+                <Plus className="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-300" />
+                Add Question
+              </button>
+            </div>
+
+            {/* Desktop Add Question Button */}
+            <div className="hidden md:flex justify-end">
               <button
                 onClick={() => navigate(`/group/${groupId}/add-question`)}
                 disabled={!isMember}
@@ -498,8 +724,8 @@ const GroupPage = () => {
           </div>
         </div>
 
-        {/* Tabs */}
-        <div className={`backdrop-blur-sm border rounded-2xl mb-8 transition-all duration-300 ${
+        {/* Tabs - Mobile Responsive */}
+        <div className={`backdrop-blur-sm border rounded-2xl mb-6 md:mb-8 transition-all duration-300 ${
           isDarkMode 
             ? 'bg-slate-800/30 border-slate-600/30' 
             : 'bg-white/40 border-gray-200/30'
@@ -507,10 +733,10 @@ const GroupPage = () => {
           <div className={`border-b transition-all duration-300 ${
             isDarkMode ? 'border-slate-700/50' : 'border-gray-300/50'
           }`}>
-            <nav className="flex space-x-8 px-6">
+            <nav className="flex px-4 md:px-6">
               <button
                 onClick={() => setActiveTab('questions')}
-                className={`py-4 px-1 border-b-2 font-medium text-sm transition-all cursor-pointer hover:scale-105 active:scale-95 ${
+                className={`flex-1 md:flex-none py-3 md:py-4 px-1 md:px-4 border-b-2 font-medium text-sm md:text-base transition-all cursor-pointer hover:scale-105 active:scale-95 text-center ${
                   activeTab === 'questions'
                     ? isDarkMode
                       ? 'border-purple-500 text-purple-400'
@@ -520,11 +746,12 @@ const GroupPage = () => {
                       : 'border-transparent text-gray-600 hover:text-gray-700'
                 }`}
               >
-                📝 Questions ({questions.length})
+                <span className="md:hidden">📝 ({questions.length})</span>
+                <span className="hidden md:inline">📝 Questions ({questions.length})</span>
               </button>
               <button
                 onClick={() => setActiveTab('members')}
-                className={`py-4 px-1 border-b-2 font-medium text-sm transition-all cursor-pointer hover:scale-105 active:scale-95 ${
+                className={`flex-1 md:flex-none py-3 md:py-4 px-1 md:px-4 border-b-2 font-medium text-sm md:text-base transition-all cursor-pointer hover:scale-105 active:scale-95 text-center ${
                   activeTab === 'members'
                     ? isDarkMode
                       ? 'border-purple-500 text-purple-400'
@@ -534,30 +761,31 @@ const GroupPage = () => {
                       : 'border-transparent text-gray-600 hover:text-gray-700'
                 }`}
               >
-                👥 Members ({members.length})
+                <span className="md:hidden">👥 ({members.length})</span>
+                <span className="hidden md:inline">👥 Members ({members.length})</span>
               </button>
             </nav>
           </div>
 
           {/* Tab Content */}
-          <div className="p-6">
+          <div className="p-4 md:p-6">
             {activeTab === 'questions' && (
               <div>
-                {/* Questions Header */}
-                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+                {/* Questions Header - Mobile Responsive */}
+                <div className="flex flex-col space-y-4 mb-6">
                   <div>
-                    <h3 className={`text-xl font-bold mb-2 transition-colors duration-300 ${
+                    <h3 className={`text-lg md:text-xl font-bold mb-1 md:mb-2 transition-colors duration-300 ${
                       isDarkMode ? 'text-white' : 'text-gray-900'
                     }`}>Group Questions</h3>
-                    <p className={`transition-colors duration-300 ${
+                    <p className={`text-sm md:text-base transition-colors duration-300 ${
                       isDarkMode ? 'text-gray-400' : 'text-gray-600'
                     }`}>Practice problems shared by group members</p>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+                  <div className="flex flex-col space-y-3 md:space-y-0 md:flex-row md:gap-4">
                     {/* Search */}
-                    <div className="relative">
-                      <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 ${
+                    <div className="relative flex-1">
+                      <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 ${
                         isDarkMode ? 'text-gray-400' : 'text-gray-500'
                       }`} />
                       <input
@@ -565,7 +793,7 @@ const GroupPage = () => {
                         placeholder="Search questions..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className={`pl-10 pr-4 py-3 border rounded-xl focus:outline-none transition-all duration-300 w-full sm:w-64 ${
+                        className={`pl-10 pr-4 py-3 border rounded-xl focus:outline-none transition-all duration-300 w-full text-sm md:text-base ${
                           isDarkMode 
                             ? 'bg-slate-700/50 border-slate-600/50 text-white placeholder-gray-400 focus:border-purple-400' 
                             : 'bg-white/70 border-gray-300/50 text-gray-900 placeholder-gray-500 focus:border-purple-500'
@@ -573,47 +801,49 @@ const GroupPage = () => {
                       />
                     </div>
 
-                    {/* Difficulty Filter */}
-                    <select
-                      value={difficultyFilter}
-                      onChange={(e) => setDifficultyFilter(e.target.value)}
-                      className={`px-4 py-3 border rounded-xl focus:outline-none transition-all duration-300 ${
-                        isDarkMode 
-                          ? 'bg-slate-700/50 border-slate-600/50 text-white focus:border-purple-400' 
-                          : 'bg-white/70 border-gray-300/50 text-gray-900 focus:border-purple-500'
-                      }`}
-                    >
-                      <option value="all">All Difficulties</option>
-                      <option value="Easy">Easy</option>
-                      <option value="Medium">Medium</option>
-                      <option value="Hard">Hard</option>
-                    </select>
+                    <div className="flex gap-3 md:gap-4">
+                      {/* Difficulty Filter */}
+                      <select
+                        value={difficultyFilter}
+                        onChange={(e) => setDifficultyFilter(e.target.value)}
+                        className={`flex-1 md:flex-none px-3 md:px-4 py-3 border rounded-xl focus:outline-none transition-all duration-300 text-sm md:text-base ${
+                          isDarkMode 
+                            ? 'bg-slate-700/50 border-slate-600/50 text-white focus:border-purple-400' 
+                            : 'bg-white/70 border-gray-300/50 text-gray-900 focus:border-purple-500'
+                        }`}
+                      >
+                        <option value="all">All Difficulties</option>
+                        <option value="Easy">Easy</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Hard">Hard</option>
+                      </select>
 
-                    {/* Refresh Button */}
-                    <button
-                      onClick={refreshQuestions}
-                      className={`flex items-center px-4 py-3 rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 group ${
-                        isDarkMode 
-                          ? 'bg-slate-700/50 text-gray-300 border-slate-600/50 hover:bg-slate-600/50' 
-                          : 'bg-white/70 text-gray-700 border-gray-300/50 hover:bg-gray-100/70'
-                      }`}
-                    >
-                      <RefreshCw className="w-4 h-4 mr-2 group-hover:rotate-180 transition-transform duration-300" />
-                      Refresh
-                    </button>
+                      {/* Refresh Button */}
+                      <button
+                        onClick={refreshQuestions}
+                        className={`flex items-center justify-center px-3 md:px-4 py-3 rounded-xl border transition-all cursor-pointer hover:scale-105 active:scale-95 group ${
+                          isDarkMode 
+                            ? 'bg-slate-700/50 text-gray-300 border-slate-600/50 hover:bg-slate-600/50' 
+                            : 'bg-white/70 text-gray-700 border-gray-300/50 hover:bg-gray-100/70'
+                        }`}
+                      >
+                        <RefreshCw className="w-4 h-4 md:mr-2 group-hover:rotate-180 transition-transform duration-300" />
+                        <span className="hidden md:inline">Refresh</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
 
                 {/* Questions List */}
                 {filteredQuestions.length === 0 ? (
-                  <div className="text-center py-20">
-                    <div className="text-6xl mb-4">📝</div>
-                    <h3 className={`text-xl font-bold mb-2 transition-colors duration-300 ${
+                  <div className="text-center py-12 md:py-20">
+                    <div className="text-4xl md:text-6xl mb-4">📝</div>
+                    <h3 className={`text-lg md:text-xl font-bold mb-2 transition-colors duration-300 ${
                       isDarkMode ? 'text-white' : 'text-gray-900'
                     }`}>
                       {searchQuery || difficultyFilter !== 'all' ? 'No questions found' : 'No questions yet'}
                     </h3>
-                    <p className={`mb-6 transition-colors duration-300 ${
+                    <p className={`mb-4 md:mb-6 px-4 text-sm md:text-base transition-colors duration-300 ${
                       isDarkMode ? 'text-gray-400' : 'text-gray-600'
                     }`}>
                       {searchQuery || difficultyFilter !== 'all' 
@@ -626,14 +856,14 @@ const GroupPage = () => {
                     {isMember && !searchQuery && difficultyFilter === 'all' && (
                       <button
                         onClick={() => navigate(`/group/${groupId}/add-question`)}
-                        className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all cursor-pointer hover:scale-105 active:scale-95"
+                        className="px-4 md:px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all cursor-pointer hover:scale-105 active:scale-95 text-sm md:text-base"
                       >
                         Add First Question
                       </button>
                     )}
                   </div>
                 ) : (
-                  <div className="space-y-6">
+                  <div className="space-y-4 md:space-y-6">
                     {filteredQuestions.map((question) => (
                       <QuestionCard
                         key={question._id}
@@ -658,27 +888,27 @@ const GroupPage = () => {
               <div>
                 <div className="flex justify-between items-center mb-6">
                   <div>
-                    <h3 className={`text-xl font-bold mb-2 transition-colors duration-300 ${
+                    <h3 className={`text-lg md:text-xl font-bold mb-1 md:mb-2 transition-colors duration-300 ${
                       isDarkMode ? 'text-white' : 'text-gray-900'
                     }`}>Group Members</h3>
-                    <p className={`transition-colors duration-300 ${
+                    <p className={`text-sm md:text-base transition-colors duration-300 ${
                       isDarkMode ? 'text-gray-400' : 'text-gray-600'
                     }`}>Everyone practicing together</p>
                   </div>
                 </div>
 
                 {members.length === 0 ? (
-                  <div className="text-center py-20">
-                    <div className="text-6xl mb-4">👥</div>
-                    <h3 className={`text-xl font-bold mb-2 transition-colors duration-300 ${
+                  <div className="text-center py-12 md:py-20">
+                    <div className="text-4xl md:text-6xl mb-4">👥</div>
+                    <h3 className={`text-lg md:text-xl font-bold mb-2 transition-colors duration-300 ${
                       isDarkMode ? 'text-white' : 'text-gray-900'
                     }`}>No members found</h3>
-                    <p className={`transition-colors duration-300 ${
+                    <p className={`text-sm md:text-base transition-colors duration-300 ${
                       isDarkMode ? 'text-gray-400' : 'text-gray-600'
                     }`}>This group doesn't have any members yet.</p>
                   </div>
                 ) : (
-                  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                     {members.map((member) => (
                       <MemberCard key={member._id} member={member} isDarkMode={isDarkMode} />
                     ))}
