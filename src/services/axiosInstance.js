@@ -3,7 +3,7 @@ import { store } from '../app/store'; // Fixed import path
 import { logout } from '../features/auth/authSlice';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5000',
+  baseURL: import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000', // Use environment variable or default to localhost
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
